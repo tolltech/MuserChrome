@@ -1,17 +1,18 @@
-function DownloadCsvJson(text, name) {
-    var csv = 'data:text/plain;charset=utf-8,'
-        + encodeURIComponent(text);
+function DownloadPlaylistFromActiveTab() {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        var currentTab = tabs && tabs[0];
 
-    var link = document.createElement('a');
-    link.setAttribute('href', csv);    
-    link.setAttribute('download', name);
-    link.style.display = 'none';
-    document.body.appendChild(link); // Required for FF
+        if (!currentTab || !currentTab.id) {
+            return;
+        }
 
-    link.click();
+        chrome.tabs.executeScript(currentTab.id, { file: "jquery.js" });
+        chrome.tabs.executeScript(currentTab.id, { file: "trigger.js" });
+    });
 }
 
-chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    var currentTab = tabs[0];
-    alert(currentTab.id);
-  });
+$(document).ready(function () {
+    $('#downloadJsonButton').click(function () {
+        DownloadPlaylistFromActiveTab();
+    });
+});
