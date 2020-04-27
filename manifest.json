@@ -1,0 +1,29 @@
+{
+  "name": "Name",
+  "short_name":"ShortName",
+  "description": "Description",
+  "version": "1.0.0",
+  "permissions": [
+    "tabs",
+    "https://vk.com/"
+  ],
+  "browser_action": {
+      "default_title": "DefaultTitle",
+      "default_icon": "icons/chrome.png",
+      "default_popup": "popup.html"
+  },
+  "icons": {
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "background": {
+    "persistent": false,
+    "scripts": ["background.js"]
+  },
+  "content_scripts": [{
+    "matches": ["file:///*"],
+    "js":      ["jquery.js"]
+  }],
+  "manifest_version": 2,
+  "content_security_policy": "script-src 'self' https://ajax.googleapis.com; object-src 'self'"
+}
