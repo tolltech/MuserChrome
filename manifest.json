@@ -1,7 +1,7 @@
 {
-  "name": "Name",
-  "short_name":"ShortName",
-  "description": "Description",
+  "name": "TollMuser",
+  "short_name":"TollMuser",
+  "description": "Save playlists from web sites",
   "version": "1.0.0",
   "permissions": [
     "tabs",
