@@ -56,4 +56,5 @@ if (!wasTollMuserInjected) {
 }
 
 var tracks = ParsePlayList();
-SendMessageToExtension({ type: FoundTracksEvent, count: tracks.Tracks.length });
+SendMessageToExtension({ type: FoundTracksEvent, payload: tracks.Tracks.length });
+SendMessageToExtension({ type: FoundTracksFullEvent, payload: tracks });

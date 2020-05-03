@@ -16,22 +16,43 @@ $(document).ready(function () {
     $('#downloadJsonButton').click(function () {
         SendMessageToCurrentActiveTab({ type: DownloadPlayListEvent });
     });
+
+    $('#refreshLinkInput').click(function () {
+        var json = $('#jsonHiddenInput').val();
+
+        $.ajax({
+            type: 'POST',
+            url: domainHost + 'sync/inputtracksexternal',
+            contentType: 'application/json; charset=utf-8',
+            crossDomain: true,
+            data: { Text: json },
+            dataType: 'json',
+            cache: false,
+            success: function (responseData, textStatus, jqXHR) {
+                alert(responseData);
+                $('#goToSiteHref').attr("href", domainHost + responseData);
+            },
+            error: function (responseData, textStatus, errorThrown) {
+                alert('POST failed.\r\n' 
+                + JSON.stringify(responseData) + '\r\n'
+                + JSON.stringify(textStatus) + '\r\n'
+                + JSON.stringify(errorThrown) + '\r\n'
+                 );
+            }
+        });
+    });
+
+
 });
 
 AddEventListener(FoundTracksEvent, function (request, sender, sendResponse) {
-    $('#foundTracksMessage').html(request.count + ' tracks on this page.');
+    var tracksCount = request.payload;
+    $('#foundTracksMessage').html(tracksCount + ' tracks on this page');
+    $('#downloadJsonButton').val('Download ' + tracksCount + 'tracks in JSON');
 })
 
-// $.ajax({
-//     type: 'POST',
-//     url: 'https://to.com/postHere.php',
-//     crossDomain: true,
-//     data: '{"some":"json"}',
-//     dataType: 'json',
-//     success: function(responseData, textStatus, jqXHR) {
-//         var value = responseData.someKey;
-//     },
-//     error: function (responseData, textStatus, errorThrown) {
-//         alert('POST failed.');
-//     }
-// });
+AddEventListener(FoundTracksFullEvent, function (request, sender, sendResponse) {
+    var tracksModel = request.payload;
+
+    $('#jsonHiddenInput').val(JSON.stringify(tracksModel));
+})
