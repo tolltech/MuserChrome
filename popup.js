@@ -1,4 +1,5 @@
-function DownloadPlaylistFromActiveTab() {
+$(document).ready(function () {
+
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
         var currentTab = tabs && tabs[0];
 
@@ -7,15 +8,19 @@ function DownloadPlaylistFromActiveTab() {
         }
 
         chrome.tabs.executeScript(currentTab.id, { file: "jquery.js" });
+        chrome.tabs.executeScript(currentTab.id, { file: "constants.js" });
+        chrome.tabs.executeScript(currentTab.id, { file: "common.js" });
         chrome.tabs.executeScript(currentTab.id, { file: "trigger.js" });
     });
-}
 
-$(document).ready(function () {
     $('#downloadJsonButton').click(function () {
-        DownloadPlaylistFromActiveTab();
+        SendMessageToCurrentActiveTab({ type: DownloadPlayListEvent });
     });
 });
+
+AddEventListener(FoundTracksEvent, function (request, sender, sendResponse) {
+    $('#foundTracksMessage').html(request.count + ' tracks on this page.');
+})
 
 // $.ajax({
 //     type: 'POST',
