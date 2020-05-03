@@ -14,45 +14,22 @@ $(document).ready(function () {
     });
 
     $('#downloadJsonButton').click(function () {
-        SendMessageToCurrentActiveTab({ type: DownloadPlayListEvent });
+        SendMessageToCurrentActiveTab(DownloadPlayListEvent);
     });
 
     $('#refreshLinkInput').click(function () {
-        var json = $('#jsonHiddenInput').val();
-
-        $.ajax({
-            type: 'POST',
-            url: domainHost + 'sync/inputtracksexternal',
-            contentType: 'application/json; charset=utf-8',
-            crossDomain: true,
-            data: { Text: json },
-            dataType: 'json',
-            cache: false,
-            success: function (responseData, textStatus, jqXHR) {
-                alert(responseData);
-                $('#goToSiteHref').attr("href", domainHost + responseData);
-            },
-            error: function (responseData, textStatus, errorThrown) {
-                alert('POST failed.\r\n' 
-                + JSON.stringify(responseData) + '\r\n'
-                + JSON.stringify(textStatus) + '\r\n'
-                + JSON.stringify(errorThrown) + '\r\n'
-                 );
-            }
-        });
+        SendMessageToCurrentActiveTab(RequestToGetUrlEvent)
     });
-
-
 });
 
-AddEventListener(FoundTracksEvent, function (request, sender, sendResponse) {
-    var tracksCount = request.payload;
+AddEventListener(FoundTracksEvent, function (tracksCount, sender, sendResponse) {
     $('#foundTracksMessage').html(tracksCount + ' tracks on this page');
-    $('#downloadJsonButton').val('Download ' + tracksCount + 'tracks in JSON');
+    $('#downloadJsonButton').val('Download ' + tracksCount + ' tracks in JSON');
 })
 
-AddEventListener(FoundTracksFullEvent, function (request, sender, sendResponse) {
-    var tracksModel = request.payload;
-
-    $('#jsonHiddenInput').val(JSON.stringify(tracksModel));
+AddEventListener(FoundTracksFullEvent, function (payload, sender, sendResponse) {
+    var url = payload.url;
+    var text = 'Import ' + payload.count + ' tracks on tolltech.ru';
+    $('#goToSiteHref').html(text);
+    $('#goToSiteHref').attr("href", url);
 })

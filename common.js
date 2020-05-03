@@ -1,10 +1,10 @@
-function SendMessageToExtension(message, callback) {
-    chrome.runtime.sendMessage(message, callback);
+function SendMessageToExtension(eventType, payload, callback) {
+    chrome.runtime.sendMessage({ type: eventType, payload: payload }, callback);
 }
 
-function SendMessageToCurrentActiveTab(message, callback) {
+function SendMessageToCurrentActiveTab(eventType, payload, callback) {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-        chrome.tabs.sendMessage(tabs[0].id, message, callback);
+        chrome.tabs.sendMessage(tabs[0].id, { type: eventType, payload: payload }, callback);
     });
 }
 
@@ -15,6 +15,6 @@ function AddEventListener(eventType, action) {
                 return;
             }
 
-            action(request);
+            action(request.payload);
         });
 }

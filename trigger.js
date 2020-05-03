@@ -53,8 +53,39 @@ if (!wasTollMuserInjected) {
     }
 
     AddEventListener(DownloadPlayListEvent, DownloadPlayList);
+
+
+    function SendUrlForImport(tracks) {
+        $.ajax({
+            type: 'POST',
+            url: domainHost + '/sync/inputtracksexternal',
+            contentType: 'application/json; charset=utf-8',
+            crossDomain: true,
+            data: JSON.stringify({ Text: JSON.stringify(tracks) }),
+            dataType: 'json',
+            cache: false,
+            success: function (responseData, textStatus, jqXHR) {
+                SendMessageToExtension(FoundTracksFullEvent, { url: domainHost + responseData.url, count: tracks.length });
+            },
+            complete: function (responseData, textStatus, jqXHR) {
+                //alert('complete');
+            },
+            error: function (responseData, textStatus, errorThrown) {
+                //alert('error');
+                // alert('POST failed.\r\n'
+                //     + JSON.stringify(responseData) + '\r\n'
+                //     + JSON.stringify(textStatus) + '\r\n'
+                //     + JSON.stringify(errorThrown) + '\r\n'
+                // );
+            }
+        });
+    }
+
+    AddEventListener(RequestToGetUrlEvent, function () {
+        var tracks = ParsePlayList();
+        SendUrlForImport(tracks.Tracks);
+    });
 }
 
 var tracks = ParsePlayList();
-SendMessageToExtension({ type: FoundTracksEvent, payload: tracks.Tracks.length });
-SendMessageToExtension({ type: FoundTracksFullEvent, payload: tracks });
+SendMessageToExtension(FoundTracksEvent, tracks.Tracks.length);
