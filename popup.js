@@ -14,24 +14,16 @@ $(document).ready(function () {
     });
 
     $('#downloadJsonButton').click(function () {
-        SendMessageToCurrentActiveTab({ type: DownloadPlayListEvent });
+        SendMessageToCurrentActiveTab(DownloadPlayListEvent);
+    });
+
+    $('#refreshLinkInput').click(function () {
+        SendMessageToCurrentActiveTab(RequestToGetUrlEvent)
     });
 });
 
-AddEventListener(FoundTracksEvent, function (request, sender, sendResponse) {
-    $('#foundTracksMessage').html(request.count + ' tracks on this page.');
+AddEventListener(FoundTracksEvent, function (tracksCount, sender, sendResponse) {
+    $('#foundTracksMessage').html(tracksCount + ' tracks on this page');
+    $('#downloadJsonButton').val('Download ' + tracksCount + ' tracks in JSON');
+    $('#refreshLinkInput').val('Import ' + tracksCount + ' tracks on tolltech.ru');
 })
-
-// $.ajax({
-//     type: 'POST',
-//     url: 'https://to.com/postHere.php',
-//     crossDomain: true,
-//     data: '{"some":"json"}',
-//     dataType: 'json',
-//     success: function(responseData, textStatus, jqXHR) {
-//         var value = responseData.someKey;
-//     },
-//     error: function (responseData, textStatus, errorThrown) {
-//         alert('POST failed.');
-//     }
-// });
