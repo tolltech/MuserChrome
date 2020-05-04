@@ -65,7 +65,7 @@ if (!wasTollMuserInjected) {
             dataType: 'json',
             cache: false,
             success: function (responseData, textStatus, jqXHR) {
-                SendMessageToExtension(FoundTracksFullEvent, { url: domainHost + responseData.url, count: tracks.length });
+                window.open(domainHost + responseData.url, '_blank');
             },
             complete: function (responseData, textStatus, jqXHR) {
                 //alert('complete');

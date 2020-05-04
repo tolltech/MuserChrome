@@ -4,7 +4,10 @@
 <head>
   <title>Title</title>
   <style>
-
+    .popupDiv {
+      padding: 5px;
+      font-size: 20px;
+    }
   </style>
   <script src="jquery.js"></script>
   <script src="constants.js"></script>
@@ -13,16 +16,19 @@
 </head>
 
 <body>
-  <div id="chContainer" style="width:450px;background: mintcream">
-    <div>
+  <div id="chContainer" style="width: 300px;">
+    <div class="popupDiv" style="display: none">
       <span id="foundTracksMessage">0 tracks on this page</span>
     </div>
-    <input id="downloadJsonButton" type="button" value="Download playlist in JSON" />
-
-    <input id="jsonHiddenInput" type="hidden" value="" />
-    <input id="refreshLinkInput" type="button" value="Refresh link" />
-
-    <a id="goToSiteHref" href="https://tolltech.ru">Go to tolltech.ru</a>
+    <div class="popupDiv">
+      <input id="refreshLinkInput" type="button" value="Refresh link" />
+    </div>
+    <!-- <div class="popupDiv">
+      <a id="goToSiteHref" href="https://tolltech.ru">Go to tolltech.ru</a>
+    </div> -->
+    <div class="popupDiv">
+      <input id="downloadJsonButton" type="button" value="Download in JSON" />
+    </div>
   </div>
 </body>
 

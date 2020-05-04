@@ -25,11 +25,5 @@ $(document).ready(function () {
 AddEventListener(FoundTracksEvent, function (tracksCount, sender, sendResponse) {
     $('#foundTracksMessage').html(tracksCount + ' tracks on this page');
     $('#downloadJsonButton').val('Download ' + tracksCount + ' tracks in JSON');
-})
-
-AddEventListener(FoundTracksFullEvent, function (payload, sender, sendResponse) {
-    var url = payload.url;
-    var text = 'Import ' + payload.count + ' tracks on tolltech.ru';
-    $('#goToSiteHref').html(text);
-    $('#goToSiteHref').attr("href", url);
+    $('#refreshLinkInput').val('Import ' + tracksCount + ' tracks on tolltech.ru');
 })
