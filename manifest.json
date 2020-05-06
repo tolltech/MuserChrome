@@ -2,9 +2,9 @@
   "name": "TollMuser",
   "short_name":"TollMuser",
   "description": "Save playlists from web sites and import it to tolltech.ru",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "permissions": [
-    "tabs",
+    "activeTab",
     "https://vk.com/",
     "https://www.shazam.com/"
   ],
