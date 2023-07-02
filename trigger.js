@@ -50,7 +50,7 @@ if (!wasTollMuserInjected) {
 
         var playlistName = $('input.page-playlist__title').val() ?? $('.page-playlist__title').html();
 
-        alert(playlistName);
+        //alert(playlistName);
 
         for (var i = 0; i < tracks.length; ++i) {
             var track = $(tracks[i]);
@@ -78,7 +78,6 @@ if (!wasTollMuserInjected) {
     }
 
     AddEventListener(DownloadPlayListEvent, DownloadPlayList);
-
 
     function SendUrlForImport(tracks) {
         $.ajax({
@@ -108,8 +107,8 @@ if (!wasTollMuserInjected) {
 
     AddEventListener(RequestToGetUrlEvent, function () {
         var tracks = ParsePlayListYandex();
-        alert(window.location);
-        alert(tracks.Tracks.Length);
+        // alert(window.location);
+        // alert(JSON.stringify( tracks.Tracks));
         SendUrlForImport(tracks.Tracks);
     });
 }

@@ -20,8 +20,8 @@
     "128": "icons/icon128.png"
   },
   "content_scripts": [{
-    "matches": ["file:///*"],
-    "js":      ["jquery.js"]
+    "matches": ["https://music.yandex.ru/*"],
+    "js":      ["jquery.js", "common.js", "constants.js", "trigger.js"]
   }],
   "manifest_version": 3
 }
