@@ -50,6 +50,8 @@ if (!wasTollMuserInjected) {
 
         var playlistName = $('input.page-playlist__title').val() ?? $('.page-playlist__title').html();
 
+        alert(playlistName);
+
         for (var i = 0; i < tracks.length; ++i) {
             var track = $(tracks[i]);
             var song = (track.find('a.d-track__title').html() ?? track.find('.d-track__title').html()).trim();
@@ -105,10 +107,12 @@ if (!wasTollMuserInjected) {
     }
 
     AddEventListener(RequestToGetUrlEvent, function () {
-        var tracks = ParsePlaParsePlayListYandexyList();
+        var tracks = ParsePlayListYandex();
+        alert(window.location);
+        alert(tracks.Tracks.Length);
         SendUrlForImport(tracks.Tracks);
     });
 }
 
-var tracks = ParsePlayListYandex();
-SendMessageToExtension(FoundTracksEvent, tracks.Tracks.length);
+ var tracks = ParsePlayListYandex();
+ SendMessageToExtension(FoundTracksEvent, tracks.Tracks.length);

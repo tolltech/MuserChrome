@@ -7,10 +7,25 @@ $(document).ready(function () {
             return;
         }
 
-        chrome.tabs.executeScript(currentTab.id, { file: "jquery.js" });
-        chrome.tabs.executeScript(currentTab.id, { file: "constants.js" });
-        chrome.tabs.executeScript(currentTab.id, { file: "common.js" });
-        chrome.tabs.executeScript(currentTab.id, { file: "trigger.js" });
+        chrome.scripting.executeScript({
+            target: {tabId: currentTab.id, allFrames: false},
+            files: ['jquery.js'],
+        });
+
+        chrome.scripting.executeScript({
+            target: {tabId: currentTab.id, allFrames: false},
+            files: ['constants.js'],
+        });
+
+        chrome.scripting.executeScript({
+            target: {tabId: currentTab.id, allFrames: false},
+            files: ['common.js'],
+        });
+
+        chrome.scripting.executeScript({
+            target: {tabId: currentTab.id, allFrames: false},
+            files: ['trigger.js'],
+        });
     });
 
     $('#downloadJsonButton').click(function () {
