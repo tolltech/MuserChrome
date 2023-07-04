@@ -1,32 +1,28 @@
 var wasTollMuserInjected;
-var playlistsCache = {};
 var playlistDomChangeEvents = [];
 
 if (!wasTollMuserInjected) {
     wasTollMuserInjected = true;
 
     function ParsePlayListYandex(jqTracks) {
-        var tracks = jqTracks || $('.page-playlist__tracks-list div.d-track');
+        var tracks = jqTracks;
         var trackInfos = [];
-
-        var playlistName = $('input.page-playlist__title').val() ?? $('.page-playlist__title').html();
 
         for (var i = 0; i < tracks.length; ++i) {
             var track = $(tracks[i]);
             var song = (track.find('a.d-track__title').html() ?? track.find('.d-track__title').html()).trim();
-            var orderId = track.attr('data-id');
 
             var artists = $(track).find('.d-track__artists a');
             var artist = artists.map(function () { return $(this).html(); }).toArray().join(', ');
 
-            trackInfos.push({ Artist: artist, Song: song, OrderId: track.attr('data-id')});
+            trackInfos.push({ Artist: artist, Song: song, OrderId: parseInt(track.attr('data-id')) });
         }
 
-        return { Tracks: trackInfos, Playlist: playlistName };
+        return trackInfos;
     }
 
     function DownloadPlayList() {
-        var tracks = GetTracksFromCacheOrHot();
+        var tracks = GetTotalTracks();
         var date = new Date();
 
         playlistName = tracks.Playlist || date.getFullYear() + '_' + (date.getMonth() + 1) + '_' + date.getDate();
@@ -42,35 +38,41 @@ if (!wasTollMuserInjected) {
 
     AddEventListener(RequestToGetUrlEvent, function () {
         alert(playlistDomChangeEvents[0]);
-        var tracks = GetTracksFromCacheOrHot();
+        var tracks = GetTotalTracks();
         SendMessageToExtension(GoToTolltechEvent, tracks.Tracks);
     });
 
     AddEventListener(GetTracksInfoEvent, function () {
-        var tracks = GetTracksFromCacheOrHot();
+        var tracks = GetTotalTracks();
         SendMessageToExtension(FoundTracksEvent, tracks.Tracks.length);
     });
 
-    function GetTracksFromCacheOrHot() {
-        var tracks = ParsePlayListYandex();
+    function GetTotalTracks() {
+        var playlistName = $('input.page-playlist__title').val() ?? $('.page-playlist__title').html();
+        var totalTracks = new Map();
 
-        if (playlistsCache[tracks.Playlist]) {
-            
+        for (var i = 0; i < playlistDomChangeEvents.length; ++i) {
+            var tracks = ParsePlayListYandex($(playlistDomChangeEvents[i]).find('div.d-track'));
+
+            for (var j = 0; j < tracks.length; ++j) {
+                totalTracks.set(tracks[j].OrderId, tracks[j]);
+            }
         }
 
-        return tracks;
-    }
-    
-    function GetTracksFromCache(){
-        var currentTracks = ParsePlayListYandex();
-
-        return {
-            Playlist: tracks.Playlist,
-            Tracks: playlistsCache[tracks.Playlist].map(function () { return JSON.parse(this); }).toArray()
-        };
+        var sortedTracks = Array.from(totalTracks.values()).sort(function (a, b) { return a.OrderId - b.OrderId });
+        return { Tracks: sortedTracks, Playlist: playlistName };
     }
 
-    $('.page-playlist__tracks-list').bind('DOMSubtreeModified', function (e) {        
-        playlistDomChangeEvents.push($(e.target).html());        
+    var firstListHtml = $('.page-playlist__tracks-list').html();
+    if (firstListHtml) {
+        playlistDomChangeEvents.push(firstListHtml);
+    }
+
+    var eee = 0;
+    $('.page-playlist__tracks-list').bind('DOMSubtreeModified', function (e) {
+        if (e.target.firstChild && e.target.firstChild.classList &&
+            e.target.firstChild.classList.contains('d-track')) {
+            playlistDomChangeEvents.push(e.target.innerHTML);
+        }
     });
 }
