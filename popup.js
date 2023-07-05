@@ -7,13 +7,18 @@ $(document).ready(function () {
         SendMessageToCurrentActiveTab(RequestToGetUrlEvent);
     });
 
-    SendMessageToCurrentActiveTab(GetTracksInfoEvent);    
+    SendMessageToCurrentActiveTab(GetTracksInfoEvent);
+    SendMessageToCurrentActiveTab(GetProgressEvent);
 });
 
 AddEventListener(FoundTracksEvent, function (tracksCount, sender, sendResponse) {
     $('#foundTracksMessage').html(tracksCount + ' tracks on this page');
     $('#downloadJsonButton').val('Download ' + tracksCount + ' tracks in JSON');
     $('#refreshLinkInput').val('Import ' + tracksCount + ' tracks on tolltech.ru');
+})
+
+AddEventListener(PushProgressEvent, function (eventsRemain, sender, sendResponse) {
+    $('#progressMessage').html(eventsRemain + ' events to parse');
 })
 
 AddEventListener(GoToTolltechEvent, function (tracks, sender, sendResponse) {

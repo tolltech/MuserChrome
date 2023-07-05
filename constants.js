@@ -3,5 +3,7 @@ var DownloadPlayListEvent = "DownloadPlayListEvent";
 var RequestToGetUrlEvent = "RequestToGetUrlEvent";
 var GetTracksInfoEvent = "GetTracksInfoEvent";
 var GoToTolltechEvent = "GoToTolltechEvent";
+var GetProgressEvent = "GetProgressEvent";
+var PushProgressEvent = "PushProgressEvent";
 var DownloadPlayListCallBackEvent = "DownloadPlayListCallBackEvent";
 var domainHost = "https://tolltech.ru";
