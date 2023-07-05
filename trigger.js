@@ -1,5 +1,6 @@
 var wasTollMuserInjected;
 var playlistDomChangeEvents = [];
+var totalTracks = new Map();
 
 if (!wasTollMuserInjected) {
     wasTollMuserInjected = true;
@@ -21,9 +22,21 @@ if (!wasTollMuserInjected) {
         return trackInfos;
     }
 
+    function AlertParseIsProcessing(){
+        if (playlistDomChangeEvents.length > 0){
+            alert('Please, wait and try again later. Parsing in progress. ' + playlistDomChangeEvents.length + ' items remain');
+            return true;
+        }
+        return false;
+    }
+
     function DownloadPlayList() {
         var tracks = GetTotalTracks();
         var date = new Date();
+
+        if (AlertParseIsProcessing()){
+            return;
+        }
 
         playlistName = tracks.Playlist || date.getFullYear() + '_' + (date.getMonth() + 1) + '_' + date.getDate();
 
@@ -37,28 +50,21 @@ if (!wasTollMuserInjected) {
     AddEventListener(DownloadPlayListEvent, DownloadPlayList);
 
     AddEventListener(RequestToGetUrlEvent, function () {
-        alert(playlistDomChangeEvents[0]);
-        var tracks = [];//GetTotalTracks();
+        if (AlertParseIsProcessing()){
+            return;
+        }
+
+        var tracks = GetTotalTracks();
         SendMessageToExtension(GoToTolltechEvent, tracks.Tracks);
     });
 
     AddEventListener(GetTracksInfoEvent, function () {
-        var tracks = [];//GetTotalTracks();
-        SendMessageToExtension(FoundTracksEvent, playlistDomChangeEvents.length);
+        var tracks = GetTotalTracks();
+        SendMessageToExtension(FoundTracksEvent, tracks.Tracks.length);
     });
 
     function GetTotalTracks() {
-        var playlistName = $('input.page-playlist__title').val() ?? $('.page-playlist__title').html();
-        var totalTracks = new Map();
-
-        for (var i = 0; i < playlistDomChangeEvents.length; ++i) {
-            var tracks = ParsePlayListYandex($(playlistDomChangeEvents[i]));
-
-            for (var j = 0; j < tracks.length; ++j) {
-                totalTracks.set(tracks[j].OrderId, tracks[j]);
-            }
-        }
-
+        var playlistName = $('input.page-playlist__title').val() ?? $('.page-playlist__title').html();        
         var sortedTracks = Array.from(totalTracks.values()).sort(function (a, b) { return a.OrderId - b.OrderId });
         return { Tracks: sortedTracks, Playlist: playlistName };
     }
@@ -75,4 +81,18 @@ if (!wasTollMuserInjected) {
             playlistDomChangeEvents.push(e.target.innerHTML);
         }
     });
+
+    let timerId = setInterval(function () {
+        var evt = playlistDomChangeEvents.pop();
+        var cnt = 1000;
+        while(evt && cnt > 0){
+            var tracks = ParsePlayListYandex($(evt));    
+            for (var j = 0; j < tracks.length; ++j) {
+                totalTracks.set(tracks[j].OrderId, tracks[j]);
+            }
+
+            --cnt;
+            evt = playlistDomChangeEvents.pop();
+        }
+    }, 100);
 }
