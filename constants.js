@@ -6,4 +6,5 @@ var GoToTolltechEvent = "GoToTolltechEvent";
 var GetProgressEvent = "GetProgressEvent";
 var PushProgressEvent = "PushProgressEvent";
 var DownloadPlayListCallBackEvent = "DownloadPlayListCallBackEvent";
+var DownloadPlayListEventBrutte = "DownloadPlayListEventBrutte";
 var domainHost = "https://tolltech.ru";

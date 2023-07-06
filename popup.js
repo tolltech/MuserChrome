@@ -2,6 +2,10 @@ $(document).ready(function () {
     $('#downloadJsonButton').click(function () {
         SendMessageToCurrentActiveTab(DownloadPlayListEvent);
     });
+    
+    $('#downloadJsonButton').click(function () {
+        SendMessageToCurrentActiveTab(DownloadPlayListEventBrutte);
+    });
 
     $('#refreshLinkInput').click(function () {
         SendMessageToCurrentActiveTab(RequestToGetUrlEvent);
@@ -14,11 +18,12 @@ $(document).ready(function () {
 AddEventListener(FoundTracksEvent, function (tracksCount, sender, sendResponse) {
     $('#foundTracksMessage').html(tracksCount + ' tracks on this page');
     $('#downloadJsonButton').val('Download ' + tracksCount + ' tracks in JSON');
+    $('#downloadJsonButtonBrutte').val('Download ' + tracksCount + ' tracks in JSON without skip-check');
     $('#refreshLinkInput').val('Import ' + tracksCount + ' tracks on tolltech.ru');
 })
 
 AddEventListener(PushProgressEvent, function (eventsRemain, sender, sendResponse) {
-    $('#progressMessage').html(eventsRemain + ' events to parse');
+    $('#progressMessage').html(eventsRemain + ' events remain to parse');
 })
 
 AddEventListener(GoToTolltechEvent, function (tracks, sender, sendResponse) {

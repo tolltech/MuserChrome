@@ -39,11 +39,11 @@ setTimeout(function () {
             return false;
         }
 
-        function DownloadPlayList() {
-            var tracks = GetTotalTracks(true);
+        function DownloadPlayList(noAlert) {
+            var tracks = GetTotalTracks(!noAlert);
             var date = new Date();
 
-            if (AlertParseIsProcessing()) {
+            if (!noAlert && AlertParseIsProcessing()) {
                 return;
             }
 
@@ -57,6 +57,7 @@ setTimeout(function () {
         }
 
         AddEventListener(DownloadPlayListEvent, DownloadPlayList);
+        AddEventListener(DownloadPlayListEventBrutte, function () { DownloadPlayList(true); });
 
         AddEventListener(RequestToGetUrlEvent, function () {
             if (AlertParseIsProcessing()) {
@@ -71,7 +72,7 @@ setTimeout(function () {
             var tracks = GetTotalTracks();
             SendMessageToExtension(FoundTracksEvent, tracks.Tracks.length);
         });
-        
+
         AddEventListener(GetProgressEvent, function () {
             SendMessageToExtension(PushProgressEvent, playlistDomChangeEvents.length);
         });
@@ -92,9 +93,8 @@ setTimeout(function () {
                     prev = totalTracks.get(i - 1) || prev;
                 }
                 if (needAlert) {
-                    var nbrs = new Set(Array.from(notFoundNeighbours.map(function () {
-                        return this.OrderId + ' - ' + this.Artist + ' - ' + this.Song;
-                    })));
+                    var nbrsStrs = notFoundNeighbours.map(x => x.OrderId + ' - ' + x.Artist + ' - ' + x.Song);
+                    var nbrs = new Set(Array.from(nbrsStrs));
                     alert('Some tracks were not parsed. Near the tracks ' + Array.from(nbrs).join('\r\n'));
                 }
             }
@@ -137,7 +137,7 @@ setTimeout(function () {
 
                 --cnt;
                 evt = playlistDomChangeEvents.pop();
-            }            
+            }
         }, 100);
     }
 }, 5000);
