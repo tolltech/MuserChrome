@@ -3,7 +3,7 @@ $(document).ready(function () {
         SendMessageToCurrentActiveTab(DownloadPlayListEvent);
     });
     
-    $('#downloadJsonButton').click(function () {
+    $('#downloadJsonButtonBrutte').click(function () {
         SendMessageToCurrentActiveTab(DownloadPlayListEventBrutte);
     });
 

@@ -95,7 +95,8 @@ setTimeout(function () {
                 if (needAlert) {
                     var nbrsStrs = notFoundNeighbours.map(x => x.OrderId + ' - ' + x.Artist + ' - ' + x.Song);
                     var nbrs = new Set(Array.from(nbrsStrs));
-                    alert('Some tracks were not parsed. Near the tracks ' + Array.from(nbrs).join('\r\n'));
+                    alert('At least ' + (maxOrderId - sortedTracks.length) + ' tracks were not parsed.' + '\r\n'
+                        + 'They are placed near the tracks ' + '\r\n' + Array.from(nbrs).join('\r\n'));
                 }
             }
 
